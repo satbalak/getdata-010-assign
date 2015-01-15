@@ -90,8 +90,11 @@ run_analysis <- function (){
     ## XYZ dimension, so separate this into 3 columns
     td1 <- separate(td, variable, into=c("variable","mean_std","XYZ_dimension"))
     
+    ## spread the mean_std into columns as that makes more sense
+    td2 <- spread(td1, mean_std, avg_reading)
+    
     ## write the output into a file
-    write.table(td1, file="output.txt")
+    write.table(td2, file="output.txt")
 
 }
 
