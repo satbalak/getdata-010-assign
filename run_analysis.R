@@ -44,11 +44,16 @@ run_analysis <- function (){
     featv <- as.character(feat[,2])
     
 
-    ## read the X_test.txt data
+    ## read the test and training data and merge them
     readIn <- read.table("X_test.txt")
     readIn <- rbind(readIn, read.table("X_train.txt"))
+    ## set the column names of the 561 variables
     colnames(readIn) <- featv
+    ## convert the data frame into data table for improving performance
     readIn <- data.table(readIn)
+    
+    ## 2. Extracts only the measurements on the mean and standard deviation 
+    ## for each measurement. 
     ## select only those columns containing "mean", exclude meanFreq
     readMean <- readIn %>% select(contains("mean", ignore.case = FALSE)) %>%
                     select(-contains("meanfreq"))
@@ -58,6 +63,7 @@ run_analysis <- function (){
     ## read the y_test.txt data
     y <- read.table("y_test.txt")
     y <- rbind(y, read.table("y_train.txt"))
+    ## 3. Uses descriptive activity names to name the activities in the data set
     a <- merge(actLab, y) 
     act <- data.frame(a[,2])
     colnames(act) <- c("activity")
@@ -67,21 +73,24 @@ run_analysis <- function (){
     sub <- rbind(sub, read.table("subject_train.txt"))
     colnames(sub) <- c("subject")
     
-    
+    ## create one data set containing, subject, activity and all readings
     read <- cbind(sub,act,readMean, readStd)
     read <- data.table(read)
     
-    #td <- gather(read, signal, reading, -subject, -activity)
-    #td_grp <- group_by(td, subject, activity, signal)
-    #td1 <- summarize(td_grp, avg_reading = mean(reading))
-    
+    ## Now, we see that the variables are all stored as columns
+    ## so we use gather and convert the variables into rows
+    ## then we group by and calculate the average reading for each variable
+    ## for each activity and each subject
     td <- read %>% gather(variable, reading, -subject, -activity) %>%
                 group_by(subject, activity, variable) %>%
                 summarize(avg_reading = mean(reading)) %>%
                 arrange(subject, activity)
     
+    ## The variable column actually contains variable, mean or std devn and 
+    ## XYZ dimension, so separate this into 3 columns
     td1 <- separate(td, variable, into=c("variable","mean_std","XYZ_dimension"))
-    head(td1)
+    
+    ## write the output into a file
     write.table(td1, file="output.txt")
 
 }
