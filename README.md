@@ -31,11 +31,11 @@ By reading the REAME.txt and features_info.txt in the zip file, we can get the f
 * In the train folder, you find the x_train, y_train and subject_train files with 7352 rows each. So, across test and train data, we have 10299 rows
 
 ### Collate the Data
-In the 'test' folder, we have subject, activity and data across 3 files. We read these files into data frames and give them the right column names. To give the column names from the 561 variables in the x_test.txt, we use the features.txt data and give the right column names in the data frame.
+In the 'test' folder, we have subject, activity and data across 3 files. We read these files into data frames and give them the right column names. To give the column names from the 561 variables in the x_test.txt, we use the features.txt data and give the right column names in the data frame. Then we just keep the mean and std values and remove all other columns. This will give us 66 columns i.e. mean and std for 33 variables.
 
 For the Activity field, we do a "merge" of the y_test.txt into activity_labels.txt and get the actual activity name in the data frame.
 
-Now, we cbind the 3 data frames - x_test, subject_test and y_test to get a collated data frame with the correct column names. This gives the collated data that we need to clean
+Now, we cbind the 3 data frames - x_test, subject_test and y_test to get a collated data frame with the correct column names. This gives the collated data that we need to clean. There are 10299 rows in this data set.
 
 ### Cleaning the data
 On the collated data set, we do gather, group by and summarize to capture the average of each variable for each activity and each subject. Then we arrange by subject and activity. After this, we see that the variable column actually has 3 values - variable name, mean or std and X/Y/Z dimension. So separate this into 3 columns.
