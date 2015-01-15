@@ -37,9 +37,16 @@ For the Activity field, we do a "merge" of the y_test.txt into activity_labels.t
 
 Now, we cbind the 3 data frames - x_test, subject_test and y_test to get a collated data frame with the correct column names. This gives the collated data that we need to clean. There are 10299 rows in this data set.
 
-### Cleaning the data
+### Clean the data
 On the collated data set, we do gather, group by and summarize to capture the average of each variable for each activity and each subject. Then we arrange by subject and activity. After this, we see that the variable column actually has 3 values - variable name, mean or std and X/Y/Z dimension. So separate this into 3 columns.
 
 After separating, we notice that it is better to have the average values of mean and std as columns. So, we use spread to do this change.
 
 Now, we have the final data set with the columns we want as output. We write this to a file.
+
+### A note on the final output file
+* There are 10299 records in the combined output. In this, there are 35 unique combinations of subject and activity
+* We do a gather on this and convert the 66 column variables into rows and this results in  679734 rows
+* Then we group by and summarize(mean) and get 2310 rows. 35 * 66 = 2310 - so this number is as expected
+* Then we separate the variable into 3 and "spread" the mean_std into columns, so we get a result of 1155 rows which is 2310/2. So this number is correct.
+* The final output.txt file has 1156 rows including the header. So, as per my logic, the output file has the expected number of rows as output.
