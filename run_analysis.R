@@ -94,7 +94,7 @@ run_analysis <- function (){
     td2 <- spread(td1, mean_std, avg_reading)
     
     ## write the output into a file
-    write.table(td2, file="output.txt")
+    write.table(td2, file="output.txt", row.names = FALSE)
 
 }
 
