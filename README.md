@@ -31,11 +31,11 @@ By reading the REAME.txt and features_info.txt in the zip file, we can get the f
 * In the train folder, you find the x_train, y_train and subject_train files with 7352 rows each. So, across test and train data, we have 10299 rows
 
 ### Collate the Data
-In the 'test' folder, we have subject, activity and data across 3 files. We read these files into data frames and give them the right column names. To give the column names from the 561 variables in the x_test.txt, we use the features.txt data and give the right column names in the data frame. Then we just keep the mean and std values and remove all other columns. This will give us 66 columns i.e. mean and std for 33 variables.
+In the 'test' and 'train' folder, we have subject, activity and data across 3 files. We read these files into data frames, rbind the test, train data and give them the right column names. To give the column names from the 561 variables in the x_test.txt, we use the features.txt data and give the right column names in the data frame. Then we just keep the mean and std values and remove all other columns. This will give us 66 columns i.e. mean and std for 33 variables.
 
-For the Activity field, we do a "merge" of the y_test.txt into activity_labels.txt and get the actual activity name in the data frame.
+Now, we cbind the 4 data frames - x, subject, mean and std to get a collated data frame with the correct column names. This gives the collated data that we need to clean. There are 10299 rows in this data set.
 
-Now, we cbind the 3 data frames - x_test, subject_test and y_test to get a collated data frame with the correct column names. This gives the collated data that we need to clean. There are 10299 rows in this data set.
+For the Activity field, we do a "merge" of the activity_labels.txt into the  and get the actual activity name in the data frame. While doing this, we also set the column name as activity and set the column order.
 
 ### Clean the data
 On the collated data set, we do gather, group by and summarize to capture the average of each variable for each activity and each subject. Then we arrange by subject and activity. After this, we see that the variable column actually has 3 values - variable name, mean or std and X/Y/Z dimension. So separate this into 3 columns.
@@ -47,6 +47,6 @@ Now, we have the final data set with the columns we want as output. We write thi
 ### A note on the final output file
 * There are 10299 records in the combined output. In this, there are 35 unique combinations of subject and activity
 * We do a gather on this and convert the 66 column variables into rows and this results in  679734 rows
-* Then we group by and summarize(mean) and get 2310 rows. 35 * 66 = 2310 - so this number is as expected
-* Then we separate the variable into 3 and "spread" the mean_std into columns, so we get a result of 1155 rows which is 2310/2. So this number is correct.
-* The final output.txt file has 1156 rows including the header. So, as per my logic, the output file has the expected number of rows as output.
+* Then we group by and summarize(mean) and get 11880 rows. 30 (subjects) * 6 (activities) * 66 = 11880 - so this number is as expected
+* Then we separate the variable into 3 and "spread" the mean_std into columns, so we get a result of 5940 rows which is 11880/2. So this number is correct.
+* The final output.txt file has 5941 rows including the header. So, as per my logic, the output file has the expected number of rows as output.

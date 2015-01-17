@@ -63,10 +63,6 @@ run_analysis <- function (){
     ## read the y_test.txt data
     y <- read.table("y_test.txt")
     y <- rbind(y, read.table("y_train.txt"))
-    ## 3. Uses descriptive activity names to name the activities in the data set
-    a <- merge(actLab, y) 
-    act <- data.frame(a[,2])
-    colnames(act) <- c("activity")
     
     ## read the subject data
     sub <- read.table("subject_test.txt")
@@ -74,14 +70,20 @@ run_analysis <- function (){
     colnames(sub) <- c("subject")
     
     ## create one data set containing, subject, activity and all readings
-    read <- cbind(sub,act,readMean, readStd)
+    read <- cbind(sub,y,readMean, readStd)
     read <- data.table(read)
+    
+    ## now merge the actLab into read and get rid of the activity id col
+    read1 <- read %>% merge(actLab, by = "V1") %>% select(-V1) %>%
+        setnames(old="V2", new="activity") %>%
+        setcolorder(neworder=c(1,68,2:67))
+    
     
     ## Now, we see that the variables are all stored as columns
     ## so we use gather and convert the variables into rows
     ## then we group by and calculate the average reading for each variable
     ## for each activity and each subject
-    td <- read %>% gather(variable, reading, -subject, -activity) %>%
+    td <- read1 %>% gather(variable, reading, -subject, -activity) %>%
                 group_by(subject, activity, variable) %>%
                 summarize(avg_reading = mean(reading)) %>%
                 arrange(subject, activity)
